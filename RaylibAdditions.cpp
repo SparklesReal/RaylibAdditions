@@ -53,8 +53,11 @@ void RaylibAdditions::updateButtonstates(std::unordered_map<std::string, ButtonC
 		auto it = std::next(buttons->begin(), i);
 		if (CheckCollisionPointRec(GetMousePosition(), it->second.rect)) {
 			it->second.state = 1;
-			if (IsMouseButtonPressed(0))
+			if (IsMouseButtonPressed(0)) {
 				it->second.state = 2;
+				if(IsSoundReady(it->second.pressedSound))
+					PlaySound(it->second.pressedSound);
+			}
 		}
 		else
 			it->second.state = 0;
