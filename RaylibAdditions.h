@@ -39,39 +39,69 @@ namespace RaylibAdditions { // Define classes here
 		Color outlineColor;
 		Color textColor;
 		int outlineThickness;
-		// state, 1 = hover, 2 = pressed
+		float scale;
+		// state, 0 = off, 1 = hover, 2 = pressed, 3 = released (only one cycle)
 		int state;
+		//optional sound
+		Sound pressedSound;
+		Sound releasedSound;
 
-		ButtonClass(Rectangle ButtonRect, std::string ButtonText, int buttonTextSize, Color buttonColor, Color buttonOutlineColor, Color buttonTextColor, int buttonOutlineThickness, int buttonState = 0, bool buttonPressed = false) {
-			rect =				ButtonRect;
-			text =				ButtonText;
+		ButtonClass(Rectangle buttonRect, std::string buttonText, int buttonTextSize, Color buttonColor, Color buttonOutlineColor, Color buttonTextColor, int buttonOutlineThickness, float buttonScale, Sound buttonPressedSound = Sound(), Sound buttonReleasedSound = Sound(), int buttonState = 0) {
+			rect =				buttonRect;
+			text =				buttonText;
 			textSize =			buttonTextSize;
 			color =				buttonColor;
 			outlineColor =		buttonOutlineColor;
 			textColor =			buttonTextColor;
 			outlineThickness =	buttonOutlineThickness;
+			scale =				buttonScale;
 			state =				buttonState;
+			pressedSound = 		buttonPressedSound;
+			releasedSound = 	buttonReleasedSound;
+		}
+	};
+
+	class LoadedButtonClass {
+	public:
+		Texture2D texture;
+		Vector2 pos;
+		float scale;
+		// state, 0 = off, 1 = hover, 2 = pressed, 3 = released (only one cycle)
+		int state;
+		//optional sound
+		Sound pressedSound;
+		Sound releasedSound;
+
+		LoadedButtonClass(Texture2D buttonTexture, Vector2 buttonPos, float buttonScale, Sound buttonPressedSound = Sound(), Sound buttonReleasedSound = Sound(), int buttonState = 0) {
+			texture = 			buttonTexture;
+			pos =				buttonPos;
+			scale =				buttonScale;
+			state =				buttonState;
+			pressedSound = 		buttonPressedSound;
+			releasedSound = 	buttonReleasedSound;
 		}
 	};
 }
 
 namespace RaylibAdditions { // Define functions here
 	// Draws text in the center of a Rectangle 
-	static void drawTextCenterRect(Rectangle& rect, std::string& text, int fontSize, Color color);
+	void drawTextCenterRect(Rectangle& rect, std::string& text, int fontSize, Color color);
 	// Draws text in the center of Rectangle custom text args
-	static void drawTextCenterRect(Rectangle& rect, std::string& text, int fontsize, float spacing, Color tint, Font font = GetFontDefault());
+	void drawTextCenterRect(Rectangle& rect, std::string& text, int fontsize, float spacing, Color tint, Font font = GetFontDefault());
 	// Draws a Rectangle with an outline
-	static void drawRectWOutline(Rectangle& rect, float lineThick, Color color, Color outlineColor);
+	void drawRectWOutline(Rectangle& rect, float lineThick, Color color, Color outlineColor);
 	// Draws a Rectangle with an outline and text
-	static void drawRectWOutlineWText(Rectangle& rect, float lineThick, Color rectColor, Color outlineColor, std::string& text, int fontSize, Color textColor);
+	void drawRectWOutlineWText(Rectangle& rect, float lineThick, Color rectColor, Color outlineColor, std::string& text, int fontSize, Color textColor);
 	// Draws a Rectangle with an outline and text using custom text args
-	static void drawRectWOutlineWText(Rectangle& rect, float lineThick, Color rectColor, Color outlineColor, std::string& text, int fontSize, Color textColor, float textSpacing, Font font = GetFontDefault());
+	void drawRectWOutlineWText(Rectangle& rect, float lineThick, Color rectColor, Color outlineColor, std::string& text, int fontSize, Color textColor, float textSpacing, Font font = GetFontDefault());
 	// Draws a button using the ButtonClass
-	static void drawButton(RaylibAdditions::ButtonClass* button);
+	void drawButton(RaylibAdditions::ButtonClass* button);
 	// Draws all the buttons in a std::unordererd_map
-	static void drawButtons(std::unordered_map<std::string, ButtonClass>* buttons);
+	void drawButtons(std::unordered_map<std::string, ButtonClass>* buttons);
 	// Updates the state of all buttons in a std::unordererd_map
-	static void updateButtonstates(std::unordered_map<std::string, ButtonClass>* buttons);
+	void updateButtonstates(std::unordered_map<std::string, ButtonClass>* buttons);
 	// Creates a normal Camera2D
-	static Camera2D createCamera();
+	Camera2D createCamera();
+	// Creates camera zooming into game area using getScreenHeight()
+	Camera2D createCamera(int gameHeight);
 }
