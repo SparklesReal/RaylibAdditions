@@ -16,7 +16,7 @@ void RaylibAdditions::drawTextCenterRect(Rectangle& rect, std::string& text, int
 	DrawTextEx(font,
 		text.c_str(),
 		{ (rect.x + rect.width / 2) - MeasureTextEx(font, text.c_str(), fontsize, spacing).x / 2, 
-		rect.y + rect.height / 2 },
+		(rect.y + rect.height / 2) + MeasureTextEx(font, text.c_str(), fontsize, spacing).y / 2},
 		fontsize,
 		spacing,
 		tint
