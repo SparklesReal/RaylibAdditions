@@ -17,14 +17,14 @@ Camera2D createCamera(int gameHeight);	// Creates camera zooming into game area 
 
 ```C++
 // Window class, construct using title, width, heigth. All args can be changed and then run updateWindow to resize and rename window
-class ProgramWindowClass {
+class WindowClass {
 public:
 	std::string title;	// Window title
 	int width;	// Window width
 	int height;	// Window height
 
-	ProgramWindowClass(std::string windowTitle, int windowWidth, int windowHeight)	// Constructor
-	~ProgramWindowClass()	// De-Constructor (runs CloseWindow())
+	WindowClass(std::string windowTitle, int windowWidth, int windowHeight)	// Constructor
+	~WindowClass()	// De-Constructor (runs CloseWindow())
 	void updateWindow()	// Updates window (run after changing varibles)
 };
 

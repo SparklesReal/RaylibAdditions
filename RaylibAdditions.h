@@ -6,20 +6,20 @@
 
 namespace RaylibAdditions { // Define classes here
 	// Window class, construct using title, width, heigth. All args can be changed and then run updateWindow to resize and rename window
-	class ProgramWindowClass {
+	class WindowClass {
 	public:
 		std::string title;
 		int width;
 		int height;
 
-		ProgramWindowClass(std::string windowTitle, int windowWidth, int windowHeight) {
+		WindowClass(std::string windowTitle, int windowWidth, int windowHeight) {
 			title = windowTitle;
 			width = windowWidth;
 			height = windowHeight;
 			InitWindow(width, height, title.c_str());
 		};
 
-		~ProgramWindowClass() {
+		~WindowClass() {
 			CloseWindow();
 		}
 
