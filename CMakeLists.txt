@@ -2,7 +2,7 @@
 
 cmake_minimum_required(VERSION 3.20)
 
-project(RaylibGuiCreator)
+project(RaylibAdditions)
 
 set(CMAKE_CXX_STANDARD 17) # Use C++ 17
 
@@ -14,6 +14,6 @@ endif()
 
 file(GLOB RAYLIB_SOURCES ${CMAKE_CURRENT_LIST_DIR}/*.cpp)
 
-add_executable(RaylibGuiCreator ${RAYLIB_SOURCES})
-target_include_directories(RaylibGuiCreator PRIVATE ${raylib_INCLUDE_DIRS})
-target_link_libraries(RaylibGuiCreator PRIVATE ${raylib_LIBRARIES})
+add_executable(RaylibAdditions ${RAYLIB_SOURCES})
+target_include_directories(RaylibAdditions PRIVATE ${raylib_INCLUDE_DIRS})
+target_link_libraries(RaylibAdditions PRIVATE ${raylib_LIBRARIES})
