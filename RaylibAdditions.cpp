@@ -82,3 +82,18 @@ Camera2D RaylibAdditions::createCamera(int gameHeight) {
 	camera.zoom = GetScreenHeight() / gameHeight;
 	return camera;
 }
+
+void RaylibAdditions::drawFPSCounter(int position, int fontSize) {
+	int positionX = 0, positionY = 0;
+	std::string FPSString = std::to_string(GetFPS());
+	if (position == 2 || position == 5 || position == 8)
+		positionX = float(GetScreenWidth()) / 2.0 - float(MeasureText(FPSString.c_str(), fontSize)) / 2.0;
+	if (position == 3 || position == 6 || position == 9)
+		positionX = float(GetScreenWidth()) - float(MeasureText(FPSString.c_str(), fontSize));
+	if (position == 4 || position == 5 || position == 6)
+		positionY = float(GetScreenHeight()) / 2.0 - fontSize / 2.0;
+	if (position == 7 || position == 8 || position == 9)
+		positionY = float(GetScreenHeight()) - fontSize;
+	DrawText(FPSString.c_str(), positionX, positionY, fontSize, BLACK);
+	return;
+}

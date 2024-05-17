@@ -11,6 +11,7 @@ void drawButtons(std::unordered_map<std::string, ButtonClass>* buttons);	// Draw
 void updateButtonstates(std::unordered_map<std::string, ButtonClass>* buttons);	// Updates the state of all buttons in a std::unordererd_map
 Camera2D createCamera();	// Creates a normal Camera2D
 Camera2D createCamera(int gameHeight);	// Creates camera zooming into game area using getScreenHeight()
+void drawFPSCounter(int position, int fontSize); // Draws an FPS counter at the position supplied 1 = top left, 2 = top middle, 3 = top right, 4 = middle left and so on
 ```
 
 ## Classes

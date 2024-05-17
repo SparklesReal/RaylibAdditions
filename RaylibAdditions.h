@@ -104,4 +104,6 @@ namespace RaylibAdditions { // Define functions here
 	Camera2D createCamera();
 	// Creates camera zooming into game area using getScreenHeight()
 	Camera2D createCamera(int gameHeight);
+	// Draws an FPS counter at the position supplied 1 = top left, 2 = top middle, 3 = top right, 4 = middle left and so on
+	void drawFPSCounter(int position, int fontSize);
 }
