@@ -3,6 +3,7 @@
 #include <raylib.h>
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 namespace RaylibAdditions { // Define classes here
 	// Window class, construct using title, width, heigth. All args can be changed and then run updateWindow to resize and rename window
@@ -81,6 +82,33 @@ namespace RaylibAdditions { // Define classes here
 			releasedSound = 	buttonReleasedSound;
 		}
 	};
+
+	class FrameClass {
+    public:
+    std::vector<Texture2D> textures;
+    std::vector<Vector2>   texturePos;
+    std::vector<float>     textureScales;
+	};
+
+	class LoadedRoomClass {
+    public:
+    std::vector<FrameClass>                         frames;
+    std::vector<RaylibAdditions::LoadedButtonClass> Buttons;
+    Sound                                           music;
+    bool                                            isValid = true;
+	}; 
+
+	class RoomClass {
+    public:
+    int ID = 0;
+    Camera2D camera = RaylibAdditions::createCamera();
+
+	// Loads a .gui room made with RaylibGuiCreator https://github.com/SparklesReal/RaylibGuiCreator also this needs to be rewritten
+    LoadedRoomClass loadRoom(std::string path, std::string fileName);
+	// Draws a single frameclass
+    void drawFrameClass(FrameClass* frame);
+	};
+	extern RoomClass Room;
 }
 
 namespace RaylibAdditions { // Define functions here

@@ -1,7 +1,12 @@
-#include "RaylibAdditions.h"
+#include "RaylibAdditions.hpp"
+#include "Functions.hpp"
 
 #include <raylib.h>
 #include <string>
+#include <fstream>
+#include <iostream>
+#include <unordered_map>
+#include <algorithm>
 
 void RaylibAdditions::drawTextCenterRect(Rectangle &rect, std::string &text, int fontSize, Color color) {
 	DrawText(text.c_str(),
@@ -96,4 +101,84 @@ void RaylibAdditions::drawFPSCounter(int position, int fontSize) {
 		positionY = float(GetScreenHeight()) - fontSize;
 	DrawText(FPSString.c_str(), positionX, positionY, fontSize, BLACK);
 	return;
+}
+
+RaylibAdditions::LoadedRoomClass RaylibAdditions::RoomClass::loadRoom(std::string path, std::string fileName) {
+    std::ifstream file;
+	file.open(path + fileName);
+	if (!file.is_open()) {
+		std::cerr << "Failed to load: " << path << std::endl;
+		LoadedRoomClass failedClass;
+		failedClass.isValid = false;
+	}
+	std::string line;
+	int currentFrame = 0;
+	bool buttons = false, music = false;
+	LoadedRoomClass LoadedRoom{};
+	while (std::getline(file, line)) {
+		std::cout << line << std::endl;
+		size_t index = line.find("!!!");
+ 		if (index != std::string::npos) {
+			std::string value = line.substr(3, line.length());
+			value = value.substr(0, value.find(':'));
+			if (functions::stringIsInt(value)) {
+				currentFrame = std::stoi(value); // use later when frame system is in place
+				continue;
+			}
+			if (value == "buttons") {
+				buttons = true;
+				continue;
+			}
+			if (value == "music") {
+				buttons = false;
+				music = true;
+				continue;
+			}
+		}
+		if(buttons == true) {
+			std::string texture = line.substr(line.find(" - ") + 3, line.find(" -- ") - line.find(" - ") - 3);
+			float textureX = stof(line.substr(line.find(" -- ") + 4, line.find(" --- ") - line.find(" -- ") - 4));
+			float textureY = stof(line.substr(line.find(" --- ") + 5, line.find(" ---- ") - line.find(" --- ") - 5));
+			float scale = stof(line.substr(line.find(" ---- ") + 7, line.find(" ----- ") - line.find(" ---- ") - 6));
+			std::string texturePressed = line.substr(line.find(" ----- ") + 7, line.find(" ! ") - line.find(" ----- ") - 7);
+			if(line.find(" !") + 4 >= line.length()) {
+				LoadedRoom.Buttons.push_back(RaylibAdditions::LoadedButtonClass(LoadTexture((path + "Textures/" + texture + ".png").c_str()), {textureX, textureY}, scale));
+				continue;
+			}
+			Sound soundPressed = LoadSound((path + "Sounds/" + line.substr(line.find(" ! ") + 3, line.find(" !! ") - line.find(" ! ") - 3) + ".wav").c_str());
+			Sound soundReleased = LoadSound((path + "Sounds/" + line.substr(line.find(" !! ") + 4, line.length() - line.find(" !! ") - 4) + ".wav").c_str());
+			LoadedRoom.Buttons.push_back(RaylibAdditions::LoadedButtonClass(LoadTexture((path + "Textures/" + texture + ".png").c_str()), {textureX, textureY}, scale, soundPressed, soundReleased));
+			continue;
+		}
+		if (music == true) {
+			line.erase(std::remove_if(line.begin(), line.end(), isspace), line.end());
+			LoadedRoom.music = LoadSound((path + "Music/" + line + ".wav").c_str());
+			break;
+		}
+		std::string texture = line.substr(line.find(" - ") + 3, line.find(" -- ") - line.find(" - ") - 3);
+		float textureX = stof(line.substr(line.find(" -- ") + 4, line.find(" --- ") - line.find(" -- ") - 4));
+		float textureY = stof(line.substr(line.find(" --- ") + 5, line.find(" ---- ") - line.find(" --- ") - 5));
+		float scale = stof(line.substr(line.find(" ---- ") + 7, line.length() - line.find(" ---- ") - 6));
+		FrameClass CurrentLoadedFrame;
+		CurrentLoadedFrame.textures.push_back(LoadTexture((path + "Textures/" + texture + ".png").c_str()));
+		std::cout << "Log: texture placed in frame: " << path + "Textures/" + texture + ".png" << std::endl;
+		CurrentLoadedFrame.texturePos.push_back(Vector2{textureX, textureY});
+		std::cout << "Log: texturePos placed in frame: " << textureX << " " << textureY << std::endl;
+		CurrentLoadedFrame.textureScales.push_back(scale);
+		std::cout << "Log: textureScale placed in frame: " << scale << std::endl;
+		LoadedRoom.frames.push_back(CurrentLoadedFrame);
+		std::cout << "Log: frame placed in LoadedRoom" << std::endl;
+	}
+	file.close();
+	return LoadedRoom;
+}
+
+void RaylibAdditions::RoomClass::drawFrameClass(FrameClass* frame) {
+	for(int i = 0; i < frame->texturePos.size(); i++) {
+		if (i > frame->textures.size() || i > frame->textureScales.size()) {
+			std::cout << "drawFrameClass error dumping frame info: " << frame->textures.data() << std::endl;
+			return;
+		}
+		DrawTexture(frame->textures.at(i), frame->texturePos.at(i).x, frame->texturePos.at(i).y, WHITE );
+	}
 }

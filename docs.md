@@ -46,4 +46,36 @@ public:
 
 	ButtonClass(Rectangle buttonRect, std::string buttonText, int buttonTextSize, Color buttonColor, Color buttonOutlineColor, Color buttonTextColor, int buttonOutlineThickness, float buttonScale, Sound buttonPressedSound = Sound(), Sound buttonReleasedSound = Sound(), int buttonState = 0) // Sounds are optional
 };
+
+class FrameClass {
+public:
+std::vector<Texture2D> textures;
+std::vector<Vector2>   texturePos;
+std::vector<float>     textureScales;
+};
+
+class LoadedRoomClass {
+public:
+std::vector<FrameClass>                         frames;
+std::vector<RaylibAdditions::LoadedButtonClass> Buttons;
+Sound                                           music;
+bool                                            isValid = true;
+}; 
+
+class RoomClass {
+public:
+int ID = 0;
+Camera2D camera = RaylibAdditions::createCamera();
+
+// Loads a .gui room made with RaylibGuiCreator https://github.com/SparklesReal/RaylibGuiCreator also this needs to be rewritten
+LoadedRoomClass loadRoom(std::string path, std::string fileName);
+// Draws a single frameclass
+void drawFrameClass(FrameClass* frame);
+};
+```
+
+### RaylibAdditions functions documentation
+
+```C++
+bool stringIsInt(std::string string); // Goes trough string, returns false if it is not of data type integer
 ```
