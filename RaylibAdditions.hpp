@@ -13,10 +13,8 @@ namespace RaylibAdditions { // Define classes here
 		int width;
 		int height;
 
-		WindowClass(std::string windowTitle, int windowWidth, int windowHeight) {
-			title = windowTitle;
-			width = windowWidth;
-			height = windowHeight;
+		WindowClass(std::string windowTitle, int windowWidth, int windowHeight) 
+		: title(windowTitle), width(windowWidth), height(windowHeight) {
 			InitWindow(width, height, title.c_str());
 		};
 
@@ -47,19 +45,8 @@ namespace RaylibAdditions { // Define classes here
 		Sound pressedSound;
 		Sound releasedSound;
 
-		ButtonClass(Rectangle buttonRect, std::string buttonText, int buttonTextSize, Color buttonColor, Color buttonOutlineColor, Color buttonTextColor, int buttonOutlineThickness, float buttonScale, Sound buttonPressedSound = Sound(), Sound buttonReleasedSound = Sound(), int buttonState = 0) {
-			rect =				buttonRect;
-			text =				buttonText;
-			textSize =			buttonTextSize;
-			color =				buttonColor;
-			outlineColor =		buttonOutlineColor;
-			textColor =			buttonTextColor;
-			outlineThickness =	buttonOutlineThickness;
-			scale =				buttonScale;
-			state =				buttonState;
-			pressedSound = 		buttonPressedSound;
-			releasedSound = 	buttonReleasedSound;
-		}
+		ButtonClass(Rectangle buttonRect, std::string buttonText, int buttonTextSize, Color buttonColor, Color buttonOutlineColor, Color buttonTextColor, int buttonOutlineThickness, float buttonScale, Sound buttonPressedSound = Sound(), Sound buttonReleasedSound = Sound(), int buttonState = 0)
+		: rect(buttonRect), text(buttonText), textSize(buttonTextSize), color(buttonColor), outlineColor(buttonOutlineColor), textColor(buttonTextColor), outlineThickness(buttonOutlineThickness), scale(buttonScale), state(buttonState), pressedSound(buttonPressedSound), releasedSound(buttonReleasedSound) {}
 	};
 
 	class LoadedButtonClass {
@@ -73,14 +60,8 @@ namespace RaylibAdditions { // Define classes here
 		Sound pressedSound;
 		Sound releasedSound;
 
-		LoadedButtonClass(Texture2D buttonTexture, Vector2 buttonPos, float buttonScale, Sound buttonPressedSound = Sound(), Sound buttonReleasedSound = Sound(), int buttonState = 0) {
-			texture = 			buttonTexture;
-			pos =				buttonPos;
-			scale =				buttonScale;
-			state =				buttonState;
-			pressedSound = 		buttonPressedSound;
-			releasedSound = 	buttonReleasedSound;
-		}
+		LoadedButtonClass(Texture2D buttonTexture, Vector2 buttonPos, float buttonScale, Sound buttonPressedSound = Sound(), Sound buttonReleasedSound = Sound(), int buttonState = 0)
+		: texture(buttonTexture), pos(buttonPos), scale(buttonScale), state(buttonState), pressedSound(buttonPressedSound), releasedSound(buttonReleasedSound) {}
 	};
 
 	class FrameClass {
