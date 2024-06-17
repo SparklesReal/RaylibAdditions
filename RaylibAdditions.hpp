@@ -4,6 +4,9 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include <variant>
+
+#include "DrawClasses.hpp"
 
 namespace RaylibAdditions { // Define classes here
 	// Window class, construct using title, width, heigth. All args can be changed and then run updateWindow to resize and rename window
@@ -90,6 +93,22 @@ namespace RaylibAdditions { // Define classes here
     void drawFrameClass(FrameClass* frame);
 	};
 	extern RoomClass Room;
+
+	class DrawClass {
+		std::vector<std::variant<
+		Rectangle,
+		DrawStructs::DrawTextCenterRectStruct,
+		DrawStructs::DrawRectRectStruct,
+		DrawStructs::DrawTextureStruct
+		>> list;
+
+		public:
+		
+		void pushList(std::variant<Rectangle, DrawStructs::DrawTextCenterRectStruct, DrawStructs::DrawRectRectStruct, DrawStructs::DrawTextureStruct> item);
+		std::variant<Rectangle, DrawStructs::DrawTextCenterRectStruct, DrawStructs::DrawRectRectStruct, DrawStructs::DrawTextureStruct> popList();
+		void clearList();
+		void drawList();
+	};
 }
 
 namespace RaylibAdditions { // Define functions here

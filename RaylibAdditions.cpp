@@ -7,6 +7,7 @@
 #include <iostream>
 #include <unordered_map>
 #include <algorithm>
+#include <typeinfo>
 
 void RaylibAdditions::drawTextCenterRect(Rectangle &rect, std::string &text, int fontSize, Color color) {
 	DrawText(text.c_str(),
@@ -181,4 +182,77 @@ void RaylibAdditions::RoomClass::drawFrameClass(FrameClass* frame) {
 		}
 		DrawTexture(frame->textures.at(i), frame->texturePos.at(i).x, frame->texturePos.at(i).y, WHITE );
 	}
+}
+
+void RaylibAdditions::DrawClass::pushList(std::variant<Rectangle, DrawStructs::DrawTextCenterRectStruct, DrawStructs::DrawRectRectStruct, DrawStructs::DrawTextureStruct> item) {
+	list.push_back(item);
+}
+
+std::variant<Rectangle, DrawStructs::DrawTextCenterRectStruct, DrawStructs::DrawRectRectStruct, DrawStructs::DrawTextureStruct> RaylibAdditions::DrawClass::popList() {
+	if (list.empty())
+		return Rectangle();
+
+	std::variant<Rectangle, DrawStructs::DrawTextCenterRectStruct, DrawStructs::DrawRectRectStruct, DrawStructs::DrawTextureStruct> lastItem = list.back();
+	list.pop_back();
+	return lastItem;
+}
+
+void RaylibAdditions::DrawClass::clearList() {
+	list.clear();
+}
+
+// Dont know how much better/worse this is but might be worth it for textures
+void RaylibAdditions::DrawClass::drawList() {
+	std::vector<Rectangle*> rectsThatAreDrawn;
+
+	for (const auto& element : list) {
+        if (std::holds_alternative<DrawStructs::DrawRectRectStruct>(element)) {
+			DrawStructs::DrawRectRectStruct DrawRectRectStruct = std::get<DrawStructs::DrawRectRectStruct>(element);
+			rectsThatAreDrawn.push_back(DrawRectRectStruct.rect);
+			
+			int drawX = DrawRectRectStruct.rect->x;
+			int drawY = DrawRectRectStruct.rect->y;
+			for (const auto& element : rectsThatAreDrawn) {
+				// jump to next rect as this is not behind another one due to it drawing more to the left or the top compared to the current one
+				if (drawX < element->x || drawY < element->y) 
+					continue;
+
+				// Can't be behind another one if its bigger
+				if (DrawRectRectStruct.rect->width > element->width || DrawRectRectStruct.rect->height > element->height)
+					continue;
+
+				if (drawX + DrawRectRectStruct.rect->width > element->x + element->width || drawY + DrawRectRectStruct.rect->height > element->y + element->height)
+					continue;
+
+				DrawRectangleRec(*(DrawRectRectStruct.rect), DrawRectRectStruct.color);
+				break;
+			}
+
+
+        } else if (std::holds_alternative<DrawStructs::DrawTextureStruct>(element)) {
+			DrawStructs::DrawTextureStruct DrawTextureStruct = std::get<DrawStructs::DrawTextureStruct>(element);
+			Rectangle RectOfTexture = {DrawTextureStruct.pos->x, DrawTextureStruct.pos->y, DrawTextureStruct.texture->height, DrawTextureStruct.texture->width};
+			rectsThatAreDrawn.push_back(&RectOfTexture); // This is prob stupid and list might work better as rect list instead of rect* list
+			
+			int drawX = RectOfTexture.x;
+			int drawY = RectOfTexture.y;
+			for (const auto& element : rectsThatAreDrawn) {
+				// jump to next rect as this is not behind another one due to it drawing more to the left or the top compared to the current one
+				if (drawX < element->x || drawY < element->y) 
+					continue;
+
+				// Can't be behind another one if its bigger
+				if (RectOfTexture.width > element->width || RectOfTexture.height > element->height)
+					continue;
+
+				if (drawX + RectOfTexture.width > element->x + element->width || drawY + RectOfTexture.height > element->y + element->height)
+					continue;
+
+				DrawTextureEx(*(DrawTextureStruct.texture), *(DrawTextureStruct.pos), 0, 1, WHITE);
+				break;
+			}
+
+		}
+	}
+
 }
