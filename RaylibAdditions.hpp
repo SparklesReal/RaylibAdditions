@@ -92,7 +92,6 @@ namespace RaylibAdditions { // Define classes here
 	// Draws a single frameclass
     void drawFrameClass(FrameClass* frame);
 	};
-	extern RoomClass Room;
 
 	class DrawClass {
 		std::vector<std::variant<
