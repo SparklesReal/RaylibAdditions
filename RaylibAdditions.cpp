@@ -119,6 +119,12 @@ RaylibAdditions::LoadedRoomClass RaylibAdditions::RoomClass::loadRoom(std::strin
 	while (std::getline(file, line)) {
 		std::cout << line << std::endl;
 		size_t index = line.find("!!!");
+
+		if (index == std::string::npos) {
+			if(line.find(":") != std::string::npos)
+				continue; // if it is first line aka defining size of room for editor
+		}
+
  		if (index != std::string::npos) {
 			std::string value = line.substr(3, line.length());
 			value = value.substr(0, value.find(':'));
