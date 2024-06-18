@@ -180,13 +180,31 @@ RaylibAdditions::LoadedRoomClass RaylibAdditions::RoomClass::loadRoom(std::strin
 	return LoadedRoom;
 }
 
+RaylibAdditions::LoadedRoomClass RaylibAdditions::RoomClass::unloadRoom(RaylibAdditions::LoadedRoomClass room) {
+	for (auto& frame : room.frames) {
+		for (auto& texture : frame.textures) {
+			UnloadTexture(texture);
+		}
+	}
+
+	for (auto& button : room.Buttons) {
+		UnloadTexture(button.texture);
+		UnloadSound(button.pressedSound);
+		UnloadSound(button.releasedSound);
+	}
+
+	UnloadSound(room.music);
+
+	return RaylibAdditions::LoadedRoomClass();
+}
+
 void RaylibAdditions::RoomClass::drawFrameClass(FrameClass* frame) {
 	for(int i = 0; i < frame->texturePos.size(); i++) {
 		if (i > frame->textures.size() || i > frame->textureScales.size()) {
 			std::cout << "drawFrameClass error dumping frame info: " << frame->textures.data() << std::endl;
 			return;
 		}
-		DrawTexture(frame->textures.at(i), frame->texturePos.at(i).x, frame->texturePos.at(i).y, WHITE );
+		DrawTexture(frame->textures[i], frame->texturePos[i].x, frame->texturePos[i].y, WHITE );
 	}
 }
 

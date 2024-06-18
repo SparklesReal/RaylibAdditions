@@ -89,6 +89,8 @@ namespace RaylibAdditions { // Define classes here
 
 	// Loads a .gui room made with RaylibGuiCreator https://github.com/SparklesReal/RaylibGuiCreator also this needs to be rewritten
     LoadedRoomClass loadRoom(std::string path, std::string fileName);
+	// Unloads a LoadedRoomClass
+	RaylibAdditions::LoadedRoomClass unloadRoom(LoadedRoomClass room);
 	// Draws a single frameclass
     void drawFrameClass(FrameClass* frame);
 	};
