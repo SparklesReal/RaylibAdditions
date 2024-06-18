@@ -265,7 +265,7 @@ void RaylibAdditions::DrawClass::drawList() {
 
         } else if (std::holds_alternative<DrawStructs::DrawTextureStruct>(element)) {
 			DrawStructs::DrawTextureStruct DrawTextureStruct = std::get<DrawStructs::DrawTextureStruct>(element);
-			Rectangle RectOfTexture = {DrawTextureStruct.pos->x, DrawTextureStruct.pos->y, DrawTextureStruct.texture->height, DrawTextureStruct.texture->width};
+			Rectangle RectOfTexture = {DrawTextureStruct.pos->x, DrawTextureStruct.pos->y, float(DrawTextureStruct.texture->height), float(DrawTextureStruct.texture->width)};
 			rectsThatAreDrawn.push_back(&RectOfTexture); // This is prob stupid and list might work better as rect list instead of rect* list
 			
 			int drawX = RectOfTexture.x;
