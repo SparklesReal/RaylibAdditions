@@ -71,6 +71,22 @@ void RaylibAdditions::updateButtonstates(std::unordered_map<std::string, ButtonC
 	}
 }
 
+void RaylibAdditions::updateButtonstates(std::unordered_map<std::string, ButtonClass>* buttons, Camera2D* camera) {
+	for (int i = 0; i < buttons->size(); i++) {
+		auto it = std::next(buttons->begin(), i);
+		if (CheckCollisionPointRec(GetScreenToWorld2D(GetMousePosition(), *(camera)), it->second.rect)) {
+			it->second.state = 1;
+			if (IsMouseButtonPressed(0)) {
+				it->second.state = 2;
+				if(IsSoundReady(it->second.pressedSound))
+					PlaySound(it->second.pressedSound);
+			}
+		}
+		else
+			it->second.state = 0;
+	}
+}
+
 Camera2D RaylibAdditions::createCamera() {
 	Camera2D camera{};
 	camera.target = Vector2{ 0, 0 };

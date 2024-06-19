@@ -129,6 +129,8 @@ namespace RaylibAdditions { // Define functions here
 	void drawButtons(std::unordered_map<std::string, ButtonClass>* buttons);
 	// Updates the state of all buttons in a std::unordererd_map
 	void updateButtonstates(std::unordered_map<std::string, ButtonClass>* buttons);
+	// updates the state of all buttons in a std::unordered_map but using a camera and does getScreenToWorld
+	void updateButtonstates(std::unordered_map<std::string, ButtonClass>* buttons, Camera2D* camera);
 	// Creates a normal Camera2D
 	Camera2D createCamera();
 	// Creates camera zooming into game area using getScreenHeight()
