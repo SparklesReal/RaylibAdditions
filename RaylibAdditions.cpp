@@ -9,6 +9,16 @@
 #include <algorithm>
 #include <typeinfo>
 
+void RaylibAdditions::drawTextLeftCenterRect(Rectangle &rect, std::string &text, int fontSize, Color color) {
+	DrawText(text.c_str(),
+		rect.x,
+		(rect.y + rect.height / 2) - fontSize / 2, 
+		fontSize,
+		color
+		);
+}
+
+
 void RaylibAdditions::drawTextCenterRect(Rectangle &rect, std::string &text, int fontSize, Color color) {
 	DrawText(text.c_str(),
 		(rect.x + rect.width / 2) - MeasureText(text.c_str(), fontSize) / 2,

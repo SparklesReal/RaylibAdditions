@@ -85,6 +85,8 @@ namespace RaylibAdditions { // Define classes here
 }
 
 namespace RaylibAdditions { // Define functions here
+	// Draws text in the Y center of a Rectangle and to the X left in the Rectangle
+	void drawTextLeftCenterRect(Rectangle& rect, std::string& text, int fontSize, Color color);
 	// Draws text in the center of a Rectangle 
 	void drawTextCenterRect(Rectangle& rect, std::string& text, int fontSize, Color color);
 	// Draws text in the center of Rectangle custom text args
