@@ -14,17 +14,17 @@ namespace RaylibAdditions {
         std::vector<Texture2D> textures;
         std::vector<Vector2>   texturePos;
         std::vector<float>     textureScales;
-        };
+    };
 
-        class LoadedRoomClass {
+    class LoadedRoomClass {
         public:
         std::vector<FrameClass>                         frames;
         std::vector<RaylibAdditions::LoadedButtonClass> Buttons;
         Sound                                           music;
         bool                                            isValid = true;
-        }; 
+    }; 
 
-        class RoomClass {
+    class RoomClass {
         public:
         int ID = 0;
         Camera2D camera;
