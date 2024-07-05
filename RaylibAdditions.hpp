@@ -87,6 +87,9 @@ namespace RaylibAdditions { // Define classes here
 namespace RaylibAdditions { // Define functions here
 	// Draws text in the Y center of a Rectangle and to the X left in the Rectangle
 	void drawTextLeftCenterRect(Rectangle& rect, std::string& text, int fontSize, Color color);
+	// Draws text in the X center of a Rectangle and to the Y top in the Rectangle
+	void drawTextCenterTopRect(Rectangle& rect, std::string& text, int fontSize, Color color);
+	void drawTextCenterTopRect(Rectangle& rect, std::string& text, int fontSize, Color color, int topOffset);
 	// Draws text in the center of a Rectangle 
 	void drawTextCenterRect(Rectangle& rect, std::string& text, int fontSize, Color color);
 	// Draws text in the center of Rectangle custom text args
@@ -95,6 +98,8 @@ namespace RaylibAdditions { // Define functions here
 	void drawRectWOutline(Rectangle& rect, float lineThick, Color color, Color outlineColor);
 	// Draws a Rectangle with an outline and text
 	void drawRectWOutlineWText(Rectangle& rect, float lineThick, Color rectColor, Color outlineColor, std::string& text, int fontSize, Color textColor);
+	// Draws a Rectangle with an outline and text but top center
+	void drawRectWOutlineWTextCenterTop(Rectangle& rect, float lineThick, Color rectColor, Color outlineColor, std::string& text, int fontSize, Color textColor);
 	// Draws a Rectangle with an outline and text using custom text args
 	void drawRectWOutlineWText(Rectangle& rect, float lineThick, Color rectColor, Color outlineColor, std::string& text, int fontSize, Color textColor, float textSpacing, Font font = GetFontDefault());
 	// Draws a button using the ButtonClass

@@ -18,6 +18,24 @@ void RaylibAdditions::drawTextLeftCenterRect(Rectangle &rect, std::string &text,
 		);
 }
 
+void RaylibAdditions::drawTextCenterTopRect(Rectangle &rect, std::string &text, int fontSize, Color color) {
+	DrawText(text.c_str(),
+		(rect.x + rect.width / 2) - MeasureText(text.c_str(), fontSize) / 2,
+		rect.y, 
+		fontSize,
+		color
+		);
+}
+
+void RaylibAdditions::drawTextCenterTopRect(Rectangle &rect, std::string &text, int fontSize, Color color, int topOffset) {
+	DrawText(text.c_str(),
+		(rect.x + rect.width / 2) - MeasureText(text.c_str(), fontSize) / 2,
+		rect.y + topOffset, 
+		fontSize,
+		color
+		);
+}
+
 
 void RaylibAdditions::drawTextCenterRect(Rectangle &rect, std::string &text, int fontSize, Color color) {
 	DrawText(text.c_str(),
@@ -47,6 +65,11 @@ void RaylibAdditions::drawRectWOutline(Rectangle& rect, float lineThick, Color c
 void RaylibAdditions::drawRectWOutlineWText(Rectangle& rect, float lineThick, Color rectColor, Color outlineColor, std::string& text, int fontSize, Color textColor) {
 	drawRectWOutline(rect, lineThick, rectColor, outlineColor);
 	drawTextCenterRect(rect, text, fontSize, textColor);
+}
+
+void RaylibAdditions::drawRectWOutlineWTextCenterTop(Rectangle& rect, float lineThick, Color rectColor, Color outlineColor, std::string& text, int fontSize, Color textColor) {
+	drawRectWOutline(rect, lineThick, rectColor, outlineColor);
+	drawTextCenterTopRect(rect, text, fontSize, textColor, lineThick);
 }
 
 void RaylibAdditions::drawRectWOutlineWText(Rectangle& rect, float lineThick, Color rectColor, Color outlineColor, std::string& text, int fontSize, Color textColor, float textSpacing, Font font) {
