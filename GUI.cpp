@@ -109,7 +109,9 @@ RaylibAdditions::LoadedRoomClass RaylibAdditions::RoomClass::loadRoom(std::strin
 		float textureX = stof(splitString[2]);
 		float textureY = stof(splitString[3]);
 		float scale = stof(splitString[4].substr(1));
-		CurrentLoadedFrame.textures.push_back(LoadTexture((path + "Textures/" + texture + ".png").c_str()));
+		if (!LoadedRoom.textures.contains(texture))
+			LoadedRoom.textures.emplace(texture, LoadTexture((path + "Textures/" + texture + ".png").c_str()));
+		CurrentLoadedFrame.textures.push_back(&LoadedRoom.textures.at(texture));
 		std::cout << "Log: texture placed in frame: " << path + "Textures/" + texture + ".png" << std::endl;
 		CurrentLoadedFrame.texturePos.push_back(Vector2{textureX, textureY});
 		std::cout << "Log: texturePos placed in frame: " << textureX << " " << textureY << std::endl;
@@ -126,8 +128,8 @@ RaylibAdditions::LoadedRoomClass RaylibAdditions::RoomClass::loadRoom(std::strin
 
 RaylibAdditions::LoadedRoomClass RaylibAdditions::RoomClass::unloadRoom(RaylibAdditions::LoadedRoomClass room) {
 	for (auto& frame : room.frames) {
-		for (auto& texture : frame.textures) {
-			UnloadTexture(texture);
+		for (auto& texture : room.textures) {
+			UnloadTexture(texture.second);
 		}
 	}
 
@@ -148,6 +150,6 @@ void RaylibAdditions::RoomClass::drawFrameClass(FrameClass* frame) {
 			std::cout << "drawFrameClass error dumping frame info: " << frame->textures.data() << std::endl;
 			return;
 		}
-		DrawTexture(frame->textures[i], frame->texturePos[i].x, frame->texturePos[i].y, WHITE);
+		DrawTexture(*(frame->textures[i]), frame->texturePos[i].x, frame->texturePos[i].y, WHITE);
 	}
 }

@@ -11,13 +11,14 @@ namespace RaylibAdditions {
 
     class FrameClass {
         public:
-        std::vector<Texture2D> textures;
+        std::vector<Texture2D*> textures;
         std::vector<Vector2>   texturePos;
         std::vector<float>     textureScales;
     };
 
     class LoadedRoomClass {
         public:
+        std::unordered_map<std::string, Texture2D>      textures;
         std::vector<FrameClass>                         frames;
         std::vector<RaylibAdditions::LoadedButtonClass> Buttons;
         Sound                                           music;
