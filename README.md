@@ -1,6 +1,6 @@
 # RaylibAdditions
 Extra additions for Raylib.
-Just here to make you life easier.
+Just here to make your life easier.
 
 # How to use
 
