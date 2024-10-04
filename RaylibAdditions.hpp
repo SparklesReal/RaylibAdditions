@@ -67,7 +67,7 @@ namespace RaylibAdditions { // Define classes here
 		: texture(buttonTexture), pos(buttonPos), scale(buttonScale), state(buttonState), pressedSound(buttonPressedSound), releasedSound(buttonReleasedSound) {}
 	};
 
-	class DrawClass {
+	class DrawClass { // Experimental use only for testing, more a preformance lost than boost
 		std::vector<std::variant<
 		Rectangle,
 		DrawStructs::DrawTextCenterRectStruct,
