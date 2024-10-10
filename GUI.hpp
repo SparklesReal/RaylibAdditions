@@ -37,4 +37,42 @@ namespace RaylibAdditions {
         // Draws a single frameclass
         void drawFrameClass(FrameClass* frame);
     };
+
+    namespace Menu {
+
+        class slider {
+
+        };
+        
+        class toggleBox {
+            public:
+            bool state = false;
+        };
+
+        class stringList {
+            public:
+            std::vector<std::string> items;
+        };
+
+        class Menu {
+            bool centered = false;
+            float xPos, yPos = 0;
+            std::vector<std::string> pageTitles;
+            int selectedPage = 0;
+            Vector2 menuSize {500, 500};
+
+            public:
+                Menu(bool center, std::vector<std::string> pageNames, Vector2 size = {800, 800}, float x = 0, float y = 0) : centered(center), pageTitles(pageNames), menuSize(size), xPos(x), yPos(y) {};
+
+                std::vector<std::unordered_map<std::string, std::variant<toggleBox, slider, stringList>>> settings; // Name, type
+                int fontSize = 20;
+                int outlineThickness = 10;
+                float titleBoxHeight = 50.0;
+                Color background = DARKGRAY;
+                Color outline = BLACK;
+                Color textColor = BLACK;
+
+                void DrawAndUpdate();
+        };
+    }
 }

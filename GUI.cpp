@@ -153,3 +153,88 @@ void RaylibAdditions::RoomClass::drawFrameClass(FrameClass* frame) {
 		DrawTexture(*(frame->textures[i]), frame->texturePos[i].x, frame->texturePos[i].y, WHITE);
 	}
 }
+
+void RaylibAdditions::Menu::Menu::DrawAndUpdate() {
+	Rectangle MenuBox = {};
+	if (centered) {
+		MenuBox.x = (GetScreenWidth() / 2) - (menuSize.x / 2);
+		MenuBox.y = (GetScreenHeight() / 2) - (menuSize.y / 2);
+	} else {
+		MenuBox.x = xPos;
+		MenuBox.y = yPos;
+	}
+	MenuBox.width = menuSize.x;
+	MenuBox.height = menuSize.y;
+
+	std::vector<Rectangle> MenuTabs = {};
+	for (int i = 0; i < pageTitles.size(); i++) {
+		MenuTabs.push_back( {MenuBox.x + outlineThickness + i * ((MenuBox.width - (outlineThickness * 2)) / pageTitles.size()),
+		MenuBox.y,
+		((MenuBox.width - (outlineThickness * 2)) / pageTitles.size()),
+		titleBoxHeight } );
+	}
+
+	int i = 0;
+	if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+		for (Rectangle& MenuTab : MenuTabs) {
+			if (CheckCollisionPointRec(GetMousePosition(), MenuTab))
+				selectedPage = i;
+			i++;
+		}
+	}
+
+	RaylibAdditions::drawRectWOutline(MenuBox, outlineThickness, background, outline);
+	for (int i = 0; i < MenuTabs.size(); i++) {
+		if (i == selectedPage)
+			drawRectWOutlineWText(MenuTabs.at(i), outlineThickness, LIGHTGRAY, outline, pageTitles.at(i), fontSize, textColor);
+		else
+			drawRectWOutlineWText(MenuTabs.at(i), outlineThickness, background, outline, pageTitles.at(i), fontSize, textColor);
+	}
+
+	i = 0;
+	std::vector<Rectangle> settingsEntry = {};
+	std::vector<std::string> settingsEntryText;
+	for (auto& setting : settings.at(selectedPage)) {
+		settingsEntry.push_back({MenuBox.x + outlineThickness + 10, 
+		MenuBox.y + titleBoxHeight + float(outlineThickness) + i * (fontSize + 5.0f), 
+		MenuBox.width - (float(outlineThickness) * 2.0f), 
+		float(fontSize) + 5.0f});
+		settingsEntryText.push_back(setting.first);
+		i++;
+	}
+
+	for (int i = 0; i < settingsEntry.size(); i++) {
+		RaylibAdditions::drawTextLeftCenterRect(settingsEntry.at(i), settingsEntryText.at(i), fontSize, textColor);
+		if (auto value = std::get_if<toggleBox>(&settings.at(selectedPage).find(settingsEntryText.at(i))->second)) {
+			Rectangle box {settingsEntry.at(i).x + MeasureText(settingsEntryText.at(i).c_str(), fontSize) + 10,
+			settingsEntry.at(i).y,
+			fontSize, fontSize};
+			DrawRectangleLinesEx(box, 1, BLACK);
+
+			if (value->state == true) {
+				DrawLine(box.x, box.y, box.x + box.width, box.y + box.height, BLACK);
+				DrawLine(box.x, box.y + box.height, box.x + box.width, box.y, BLACK);
+			}
+		}
+	}
+
+	if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+		i = 0;
+		for (Rectangle& entry : settingsEntry) {
+        if (CheckCollisionPointRec(GetMousePosition(), entry)) {
+            auto& settingMap = settings.at(selectedPage);
+            auto it = settingMap.find(settingsEntryText.at(i));
+
+            if (it != settingMap.end()) {
+                if (auto value = std::get_if<toggleBox>(&it->second)) {
+					if (value->state == false)
+                    	value->state = true;
+					else 
+						value->state = false;
+                }
+            }
+        }
+        i++;
+    }
+	}
+}
