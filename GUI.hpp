@@ -65,7 +65,8 @@ namespace RaylibAdditions {
                 Menu(bool center, std::vector<std::string> pageNames, Vector2 size = {800, 800}, float x = 0, float y = 0) : centered(center), pageTitles(pageNames), menuSize(size), xPos(x), yPos(y) {};
 
                 std::vector<std::unordered_map<std::string, std::variant<toggleBox, slider, stringList>>> settings; // Name, type
-                int fontSize = 20;
+                int titleFontSize = 20;
+                int entryFontSize = 60;
                 int outlineThickness = 10;
                 float titleBoxHeight = 50.0;
                 Color background = DARKGRAY;

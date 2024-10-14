@@ -186,9 +186,9 @@ void RaylibAdditions::Menu::Menu::DrawAndUpdate() {
 	RaylibAdditions::drawRectWOutline(MenuBox, outlineThickness, background, outline);
 	for (int i = 0; i < MenuTabs.size(); i++) {
 		if (i == selectedPage)
-			drawRectWOutlineWText(MenuTabs.at(i), outlineThickness, LIGHTGRAY, outline, pageTitles.at(i), fontSize, textColor);
+			drawRectWOutlineWText(MenuTabs.at(i), outlineThickness, LIGHTGRAY, outline, pageTitles.at(i), titleFontSize, textColor);
 		else
-			drawRectWOutlineWText(MenuTabs.at(i), outlineThickness, background, outline, pageTitles.at(i), fontSize, textColor);
+			drawRectWOutlineWText(MenuTabs.at(i), outlineThickness, background, outline, pageTitles.at(i), titleFontSize, textColor);
 	}
 
 	i = 0;
@@ -196,19 +196,19 @@ void RaylibAdditions::Menu::Menu::DrawAndUpdate() {
 	std::vector<std::string> settingsEntryText;
 	for (auto& setting : settings.at(selectedPage)) {
 		settingsEntry.push_back({MenuBox.x + outlineThickness + 10, 
-		MenuBox.y + titleBoxHeight + float(outlineThickness) + i * (fontSize + 5.0f), 
+		MenuBox.y + titleBoxHeight + float(outlineThickness) + i * (entryFontSize + 5.0f), 
 		MenuBox.width - (float(outlineThickness) * 2.0f), 
-		float(fontSize) + 5.0f});
+		float(entryFontSize) + 5.0f});
 		settingsEntryText.push_back(setting.first);
 		i++;
 	}
 
 	for (int i = 0; i < settingsEntry.size(); i++) {
-		RaylibAdditions::drawTextLeftCenterRect(settingsEntry.at(i), settingsEntryText.at(i), fontSize, textColor);
+		RaylibAdditions::drawTextLeftCenterRect(settingsEntry.at(i), settingsEntryText.at(i), entryFontSize, textColor);
 		if (auto value = std::get_if<toggleBox>(&settings.at(selectedPage).find(settingsEntryText.at(i))->second)) {
-			Rectangle box {settingsEntry.at(i).x + MeasureText(settingsEntryText.at(i).c_str(), fontSize) + 10,
+			Rectangle box {settingsEntry.at(i).x + MeasureText(settingsEntryText.at(i).c_str(), entryFontSize) + 10,
 			settingsEntry.at(i).y,
-			fontSize, fontSize};
+			entryFontSize, entryFontSize};
 			DrawRectangleLinesEx(box, 1, BLACK);
 
 			if (value->state == true) {
