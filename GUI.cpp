@@ -208,7 +208,7 @@ void RaylibAdditions::Menu::Menu::DrawAndUpdate() {
 		if (auto value = std::get_if<toggleBox>(&settings.at(selectedPage).find(settingsEntryText.at(i))->second)) {
 			Rectangle box {settingsEntry.at(i).x + MeasureText(settingsEntryText.at(i).c_str(), entryFontSize) + 10,
 			settingsEntry.at(i).y,
-			entryFontSize, entryFontSize};
+			float(entryFontSize), float(entryFontSize)};
 			DrawRectangleLinesEx(box, 1, BLACK);
 
 			if (value->state == true) {
@@ -220,7 +220,7 @@ void RaylibAdditions::Menu::Menu::DrawAndUpdate() {
 		if (auto value = std::get_if<slider>(&settings.at(selectedPage).find(settingsEntryText.at(i))->second)) {
 			Rectangle sliderBox {settingsEntry.at(i).x + MeasureText(settingsEntryText.at(i).c_str(), entryFontSize) + 10,
 			settingsEntry.at(i).y,
-			entryFontSize * 5, entryFontSize};
+			float(entryFontSize) * 5.0f, float(entryFontSize)};
 			value->procentageRect = {sliderBox.x + 1, sliderBox.y + 1, (sliderBox.width - 2) * (value->procentage / 100), sliderBox.height - 2};
 
 			DrawRectangleLinesEx(sliderBox, 1, BLACK);
