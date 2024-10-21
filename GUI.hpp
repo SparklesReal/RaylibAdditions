@@ -41,7 +41,9 @@ namespace RaylibAdditions {
     namespace Menu {
 
         class slider {
-
+            public:
+            int procentage = 100;
+            Rectangle procentageRect = {};
         };
         
         class toggleBox {
@@ -66,7 +68,7 @@ namespace RaylibAdditions {
 
                 std::vector<std::unordered_map<std::string, std::variant<toggleBox, slider, stringList>>> settings; // Name, type
                 int titleFontSize = 20;
-                int entryFontSize = 60;
+                int entryFontSize = 40;
                 int outlineThickness = 10;
                 float titleBoxHeight = 50.0;
                 Color background = DARKGRAY;
