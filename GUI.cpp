@@ -212,9 +212,21 @@ void RaylibAdditions::Menu::Menu::DrawAndUpdate() {
 			DrawRectangleLinesEx(box, 1, BLACK);
 
 			if (value->state == true) {
-				DrawLine(box.x, box.y, box.x + box.width, box.y + box.height, BLACK);
-				DrawLine(box.x, box.y + box.height, box.x + box.width, box.y, BLACK);
+				DrawLineEx({box.x, box.y}, {box.x + box.width, box.y + box.height}, entryFontSize/10, BLACK);
+				DrawLineEx({box.x, box.y + box.height}, {box.x + box.width, box.y}, entryFontSize/10, BLACK);
 			}
+		}
+
+		if (auto value = std::get_if<slider>(&settings.at(selectedPage).find(settingsEntryText.at(i))->second)) {
+			Rectangle sliderBox {settingsEntry.at(i).x + MeasureText(settingsEntryText.at(i).c_str(), entryFontSize) + 10,
+			settingsEntry.at(i).y,
+			entryFontSize * 5, entryFontSize};
+			value->procentageRect = {sliderBox.x + 1, sliderBox.y + 1, (sliderBox.width - 2) * (value->procentage / 100), sliderBox.height - 2};
+
+			DrawRectangleLinesEx(sliderBox, 1, BLACK);
+			DrawRectangleRec(value->procentageRect, GREEN);
+
+			
 		}
 	}
 
@@ -231,6 +243,10 @@ void RaylibAdditions::Menu::Menu::DrawAndUpdate() {
                     	value->state = true;
 					else 
 						value->state = false;
+                }
+
+				if (auto value = std::get_if<slider>(&it->second)) {
+					// DO THING
                 }
             }
         }
