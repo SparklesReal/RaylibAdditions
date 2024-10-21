@@ -221,9 +221,9 @@ void RaylibAdditions::Menu::Menu::DrawAndUpdate() {
 			Rectangle sliderBox {settingsEntry.at(i).x + MeasureText(settingsEntryText.at(i).c_str(), entryFontSize) + 10,
 			settingsEntry.at(i).y,
 			float(entryFontSize) * 5.0f, float(entryFontSize)};
-			value->procentageRect = {sliderBox.x + 1, sliderBox.y + 1, (sliderBox.width - 2) * (value->procentage / 100), sliderBox.height - 2};
+			value->procentageRect = {sliderBox.x + outlineThickness / 5, sliderBox.y + outlineThickness / 5, (sliderBox.width - (outlineThickness / 5 * 2)) * (value->procentage / 100), sliderBox.height - (outlineThickness / 5 * 2)};
 
-			DrawRectangleLinesEx(sliderBox, 1, BLACK);
+			DrawRectangleLinesEx(sliderBox, outlineThickness, BLACK);
 			DrawRectangleRec(value->procentageRect, GREEN);
 
 			
