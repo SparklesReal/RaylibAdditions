@@ -43,6 +43,7 @@ namespace RaylibAdditions {
         class slider {
             public:
             int procentage = 100;
+            Rectangle box = {};
             Rectangle procentageRect = {};
         };
         
@@ -75,7 +76,7 @@ namespace RaylibAdditions {
                 Color outline = BLACK;
                 Color textColor = BLACK;
 
-                void DrawAndUpdate();
+                void DrawAndUpdate(Vector2 mousePos = GetMousePosition());
         };
     }
 }
