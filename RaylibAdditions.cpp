@@ -95,7 +95,7 @@ void RaylibAdditions::updateButtonstates(std::unordered_map<std::string, ButtonC
 			it->second.state = 1;
 			if (IsMouseButtonPressed(0)) {
 				it->second.state = 2;
-				if(IsSoundReady(it->second.pressedSound))
+				if(IsSoundValid(it->second.pressedSound))
 					PlaySound(it->second.pressedSound);
 			}
 		}
@@ -111,7 +111,7 @@ void RaylibAdditions::updateButtonstates(std::unordered_map<std::string, ButtonC
 			it->second.state = 1;
 			if (IsMouseButtonPressed(0)) {
 				it->second.state = 2;
-				if(IsSoundReady(it->second.pressedSound))
+				if(IsSoundValid(it->second.pressedSound))
 					PlaySound(it->second.pressedSound);
 			}
 		}

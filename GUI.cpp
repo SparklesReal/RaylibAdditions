@@ -154,7 +154,8 @@ void RaylibAdditions::RoomClass::drawFrameClass(FrameClass* frame) {
 	}
 }
 
-void RaylibAdditions::Menu::Menu::DrawAndUpdate() {
+// This code looks more trash than my room
+void RaylibAdditions::Menu::Menu::DrawAndUpdate(Vector2 mousePos) {
 	Rectangle MenuBox = {};
 	if (centered) {
 		MenuBox.x = (GetScreenWidth() / 2) - (menuSize.x / 2);
@@ -177,7 +178,7 @@ void RaylibAdditions::Menu::Menu::DrawAndUpdate() {
 	int i = 0;
 	if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
 		for (Rectangle& MenuTab : MenuTabs) {
-			if (CheckCollisionPointRec(GetMousePosition(), MenuTab))
+			if (CheckCollisionPointRec(mousePos, MenuTab))
 				selectedPage = i;
 			i++;
 		}
@@ -208,7 +209,7 @@ void RaylibAdditions::Menu::Menu::DrawAndUpdate() {
 		if (auto value = std::get_if<toggleBox>(&settings.at(selectedPage).find(settingsEntryText.at(i))->second)) {
 			Rectangle box {settingsEntry.at(i).x + MeasureText(settingsEntryText.at(i).c_str(), entryFontSize) + 10,
 			settingsEntry.at(i).y,
-			entryFontSize, entryFontSize};
+			float(entryFontSize), float(entryFontSize)};
 			DrawRectangleLinesEx(box, 1, BLACK);
 
 			if (value->state == true) {
@@ -218,37 +219,53 @@ void RaylibAdditions::Menu::Menu::DrawAndUpdate() {
 		}
 
 		if (auto value = std::get_if<slider>(&settings.at(selectedPage).find(settingsEntryText.at(i))->second)) {
-			Rectangle sliderBox {settingsEntry.at(i).x + MeasureText(settingsEntryText.at(i).c_str(), entryFontSize) + 10,
+			value->box = {
+			settingsEntry.at(i).x + MeasureText(settingsEntryText.at(i).c_str(), entryFontSize) + 10,
 			settingsEntry.at(i).y,
-			entryFontSize * 5, entryFontSize};
-			value->procentageRect = {sliderBox.x + 1, sliderBox.y + 1, (sliderBox.width - 2) * (value->procentage / 100), sliderBox.height - 2};
+			float(entryFontSize) * 5.0f,
+			float(entryFontSize)
+			};
 
-			DrawRectangleLinesEx(sliderBox, 1, BLACK);
+			value->procentageRect = {
+			value->box.x + float(entryFontSize) / 10.0f,
+			value->box.y + float(entryFontSize) / 10.0f, 
+			(value->box.width - ((float(entryFontSize) / 10.0f) * 2.0f)) * (value->procentage / 100.0f), 
+			value->box.height - ((float(entryFontSize) / 10.0f) * 2.0f)
+			};
+
+			DrawRectangleLinesEx(value->box, float(entryFontSize) / 10.0f, BLACK);
 			DrawRectangleRec(value->procentageRect, GREEN);
-
-			
 		}
 	}
 
-	if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+	if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
 		i = 0;
 		for (Rectangle& entry : settingsEntry) {
-        if (CheckCollisionPointRec(GetMousePosition(), entry)) {
+        if (CheckCollisionPointRec(mousePos, entry)) {
             auto& settingMap = settings.at(selectedPage);
             auto it = settingMap.find(settingsEntryText.at(i));
 
             if (it != settingMap.end()) {
                 if (auto value = std::get_if<toggleBox>(&it->second)) {
-					if (value->state == false)
-                    	value->state = true;
-					else 
-						value->state = false;
+					if (IsMouseButtonPressed(0)) {
+						if (value->state == false)
+							value->state = true;
+						else 
+							value->state = false;
+					}
                 }
 
 				if (auto value = std::get_if<slider>(&it->second)) {
-					// DO THING
+					Rectangle collisionRect = value->box;
+					collisionRect.x += (float(entryFontSize) / 10.0f);
+					collisionRect.width -= ((float(entryFontSize) / 10.0f) * 2.0f);
+					if (CheckCollisionPointRec(mousePos, collisionRect)) {
+						value->procentage = 100 / ((value->box.width - ((float(entryFontSize) / 10.0f) * 2)) / ((mousePos.x + 1) - (value->box.x+float(entryFontSize) / 10.0f)) );
+					}
                 }
+
             }
+
         }
         i++;
     }
