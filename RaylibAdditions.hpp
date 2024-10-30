@@ -16,9 +16,10 @@ namespace RaylibAdditions { // Define classes here
 		int width;
 		int height;
 
-		WindowClass(std::string windowTitle, int windowWidth, int windowHeight) 
+		WindowClass(std::string windowTitle, int windowWidth, int windowHeight, int monitor = 0) 
 		: title(windowTitle), width(windowWidth), height(windowHeight) {
 			InitWindow(width, height, title.c_str());
+			SetWindowMonitor(monitor);
 		};
 
 		~WindowClass() {
