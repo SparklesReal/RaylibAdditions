@@ -195,18 +195,24 @@ void RaylibAdditions::Menu::Menu::DrawAndUpdate(Vector2 mousePos) {
 	i = 0;
 	std::vector<Rectangle> settingsEntry = {};
 	std::vector<std::string> settingsEntryText;
+	
 	for (auto& setting : settings.at(selectedPage)) {
+		std::string entryName = std::visit([](const auto& obj) -> std::string {
+        	return obj.name;
+    	}, setting);
+
 		settingsEntry.push_back({MenuBox.x + outlineThickness + 10, 
 		MenuBox.y + titleBoxHeight + float(outlineThickness) + i * (entryFontSize + 5.0f), 
 		MenuBox.width - (float(outlineThickness) * 2.0f), 
 		float(entryFontSize) + 5.0f});
-		settingsEntryText.push_back(setting.first);
+		settingsEntryText.push_back(entryName);
 		i++;
 	}
 
 	for (int i = 0; i < settingsEntry.size(); i++) {
 		RaylibAdditions::drawTextLeftCenterRect(settingsEntry.at(i), settingsEntryText.at(i), entryFontSize, textColor);
-		if (auto value = std::get_if<toggleBox>(&settings.at(selectedPage).find(settingsEntryText.at(i))->second)) {
+
+		if (auto value = std::get_if<toggleBox>(&settings.at(selectedPage).at(i))) {
 			Rectangle box {settingsEntry.at(i).x + MeasureText(settingsEntryText.at(i).c_str(), entryFontSize) + 10,
 			settingsEntry.at(i).y,
 			float(entryFontSize), float(entryFontSize)};
@@ -218,7 +224,7 @@ void RaylibAdditions::Menu::Menu::DrawAndUpdate(Vector2 mousePos) {
 			}
 		}
 
-		if (auto value = std::get_if<slider>(&settings.at(selectedPage).find(settingsEntryText.at(i))->second)) {
+		if (auto value = std::get_if<slider>(&settings.at(selectedPage).at(i))) {
 			value->box = {
 			settingsEntry.at(i).x + MeasureText(settingsEntryText.at(i).c_str(), entryFontSize) + 10,
 			settingsEntry.at(i).y,
@@ -242,20 +248,18 @@ void RaylibAdditions::Menu::Menu::DrawAndUpdate(Vector2 mousePos) {
 		i = 0;
 		for (Rectangle& entry : settingsEntry) {
         if (CheckCollisionPointRec(mousePos, entry)) {
-            auto& settingMap = settings.at(selectedPage);
-            auto it = settingMap.find(settingsEntryText.at(i));
+            auto& settingList = settings.at(selectedPage);
+            auto& it = settingList.at(i);
 
-            if (it != settingMap.end()) {
-                if (auto value = std::get_if<toggleBox>(&it->second)) {
+            if (it.index() != settingList.size()) {
+                if (auto value = std::get_if<toggleBox>(&it)) {
 					if (IsMouseButtonPressed(0)) {
-						if (value->state == false)
-							value->state = true;
-						else 
-							value->state = false;
+						value->state = !value->state;
+						std::cerr << value->state;
 					}
                 }
 
-				if (auto value = std::get_if<slider>(&it->second)) {
+				if (auto value = std::get_if<slider>(&it)) {
 					Rectangle collisionRect = value->box;
 					collisionRect.x += (float(entryFontSize) / 10.0f);
 					collisionRect.width -= ((float(entryFontSize) / 10.0f) * 2.0f);

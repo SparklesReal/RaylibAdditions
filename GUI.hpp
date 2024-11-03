@@ -42,6 +42,9 @@ namespace RaylibAdditions {
 
         class slider {
             public:
+            slider(std::string entryName) : name(entryName) {};
+
+            std::string name;
             int procentage = 100;
             Rectangle box = {};
             Rectangle procentageRect = {};
@@ -49,11 +52,17 @@ namespace RaylibAdditions {
         
         class toggleBox {
             public:
+            toggleBox(std::string entryName) : name(entryName) {};
+
+            std::string name;
             bool state = false;
         };
 
         class stringList {
             public:
+            stringList(std::string entryName) : name(entryName) {};
+
+            std::string name;
             std::vector<std::string> items;
         };
 
@@ -65,9 +74,13 @@ namespace RaylibAdditions {
             Vector2 menuSize {500, 500};
 
             public:
-                Menu(bool center, std::vector<std::string> pageNames, Vector2 size = {800, 800}, float x = 0, float y = 0) : centered(center), pageTitles(pageNames), menuSize(size), xPos(x), yPos(y) {};
+                Menu(bool center, std::vector<std::string> pageNames, Vector2 size = {800, 800}, float x = 0, float y = 0) : centered(center), pageTitles(pageNames), menuSize(size), xPos(x), yPos(y) {
+                    for (int i = 0; i < pageNames.size(); i++) {
+                        this->settings.push_back({});
+                    }
+                };
 
-                std::vector<std::unordered_map<std::string, std::variant<toggleBox, slider, stringList>>> settings; // Name, type
+                std::vector<std::vector<std::variant<toggleBox, slider, stringList>>> settings; // Name, type
                 int titleFontSize = 20;
                 int entryFontSize = 40;
                 int outlineThickness = 10;
