@@ -7,8 +7,6 @@
 
 namespace RaylibAdditions {
 
-    std::vector<std::string> splitString(std::string string, std::string seperator);
-
     class FrameClass {
         public:
         std::vector<Texture2D*> textures;
@@ -42,7 +40,7 @@ namespace RaylibAdditions {
 
         class slider {
             public:
-            slider(std::string entryName) : name(entryName) {};
+            slider(std::string entryName, int entryProcentage) : name(entryName), procentage(entryProcentage) {};
 
             std::string name;
             int procentage = 100;
@@ -52,7 +50,7 @@ namespace RaylibAdditions {
         
         class toggleBox {
             public:
-            toggleBox(std::string entryName) : name(entryName) {};
+            toggleBox(std::string entryName, bool entryState) : name(entryName), state(entryState) {};
 
             std::string name;
             bool state = false;
@@ -72,15 +70,20 @@ namespace RaylibAdditions {
             std::vector<std::string> pageTitles;
             int selectedPage = 0;
             Vector2 menuSize {500, 500};
+            std::vector<std::vector<std::variant<toggleBox, slider, stringList>>> settings; // Name, type
 
             public:
-                Menu(bool center, std::vector<std::string> pageNames, Vector2 size = {800, 800}, float x = 0, float y = 0) : centered(center), pageTitles(pageNames), menuSize(size), xPos(x), yPos(y) {
+                Menu(bool center, std::vector<std::string> pageNames = {}, Vector2 size = {800, 800}, float x = 0, float y = 0) : centered(center), pageTitles(pageNames), menuSize(size), xPos(x), yPos(y) {
                     for (int i = 0; i < pageNames.size(); i++) {
                         this->settings.push_back({});
                     }
                 };
 
-                std::vector<std::vector<std::variant<toggleBox, slider, stringList>>> settings; // Name, type
+
+                void loadSettingsFromFile(std::string path);
+                void saveSettingsToFile(std::string path);
+                void addSettingToPage(std::string page, std::variant<toggleBox, slider, stringList> setting);
+
                 int titleFontSize = 20;
                 int entryFontSize = 40;
                 int outlineThickness = 10;
