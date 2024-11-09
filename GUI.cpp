@@ -153,9 +153,9 @@ void RaylibAdditions::Menu::Menu::DrawAndUpdate(Vector2 mousePos) {
 
 	std::vector<Rectangle> MenuTabs = {};
 	for (int i = 0; i < pageTitles.size(); i++) {
-		MenuTabs.push_back( {MenuBox.x + outlineThickness + i * ((MenuBox.width - (outlineThickness * 2)) / pageTitles.size()),
+		MenuTabs.push_back( {MenuBox.x + i * (MenuBox.width / pageTitles.size()),
 		MenuBox.y,
-		((MenuBox.width - (outlineThickness * 2)) / pageTitles.size()),
+		((MenuBox.width + outlineThickness)  / float(pageTitles.size())),
 		titleBoxHeight } );
 	}
 
@@ -180,7 +180,7 @@ void RaylibAdditions::Menu::Menu::DrawAndUpdate(Vector2 mousePos) {
 	std::vector<Rectangle> settingsEntry = {};
 	std::vector<std::string> settingsEntryText;
 	
-	for (auto& setting : settings.at(selectedPage)) {
+	for (auto& setting : settings.at(selectedPage)) {  
 		std::string entryName = std::visit([](const auto& obj) -> std::string {
         	return obj.name;
     	}, setting);
