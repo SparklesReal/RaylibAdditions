@@ -153,9 +153,9 @@ void RaylibAdditions::Menu::Menu::DrawAndUpdate(Vector2 mousePos) {
 
 	std::vector<Rectangle> MenuTabs = {};
 	for (int i = 0; i < pageTitles.size(); i++) {
-		MenuTabs.push_back( {MenuBox.x + i * (MenuBox.width / pageTitles.size()),
+		MenuTabs.push_back( {MenuBox.x + i * ((MenuBox.width / pageTitles.size()) - outlineThickness / 2),
 		MenuBox.y,
-		((MenuBox.width + outlineThickness)  / float(pageTitles.size())),
+		(MenuBox.width   / float(pageTitles.size())) + outlineThickness * 2.0f,
 		titleBoxHeight } );
 	}
 
