@@ -157,7 +157,7 @@ void RaylibAdditions::Menu::Menu::DrawAndUpdate(Vector2 mousePos) {
 
 	for (int i = 0; i < pageTitles.size(); i++) {
 		MenuTabs.push_back({
-			MenuBox.x + i * (tabWidth - outlineThickness),  // Overlap each tab by `outlineThickness`
+			MenuBox.x + i * (tabWidth - outlineThickness),
 			MenuBox.y,
 			tabWidth,
 			titleBoxHeight
