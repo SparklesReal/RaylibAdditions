@@ -7,8 +7,6 @@
 
 namespace RaylibAdditions {
 
-    std::vector<std::string> splitString(std::string string, std::string seperator);
-
     class FrameClass {
         public:
         std::vector<Texture2D*> textures;
@@ -42,6 +40,9 @@ namespace RaylibAdditions {
 
         class slider {
             public:
+            slider(std::string entryName, int entryProcentage) : name(entryName), procentage(entryProcentage) {};
+
+            std::string name;
             int procentage = 100;
             Rectangle box = {};
             Rectangle procentageRect = {};
@@ -49,11 +50,17 @@ namespace RaylibAdditions {
         
         class toggleBox {
             public:
+            toggleBox(std::string entryName, bool entryState) : name(entryName), state(entryState) {};
+
+            std::string name;
             bool state = false;
         };
 
         class stringList {
             public:
+            stringList(std::string entryName) : name(entryName) {};
+
+            std::string name;
             std::vector<std::string> items;
         };
 
@@ -63,11 +70,20 @@ namespace RaylibAdditions {
             std::vector<std::string> pageTitles;
             int selectedPage = 0;
             Vector2 menuSize {500, 500};
+            std::vector<std::vector<std::variant<toggleBox, slider, stringList>>> settings; // Name, type
 
             public:
-                Menu(bool center, std::vector<std::string> pageNames, Vector2 size = {800, 800}, float x = 0, float y = 0) : centered(center), pageTitles(pageNames), menuSize(size), xPos(x), yPos(y) {};
+                Menu(bool center, std::vector<std::string> pageNames = {}, Vector2 size = {800, 800}, float x = 0, float y = 0) : centered(center), pageTitles(pageNames), menuSize(size), xPos(x), yPos(y) {
+                    for (int i = 0; i < pageNames.size(); i++) {
+                        this->settings.push_back({});
+                    }
+                };
 
-                std::vector<std::unordered_map<std::string, std::variant<toggleBox, slider, stringList>>> settings; // Name, type
+
+                void loadSettingsFromFile(std::string path);
+                void saveSettingsToFile(std::string path);
+                void addSettingToPage(std::string page, std::variant<toggleBox, slider, stringList> setting);
+
                 int titleFontSize = 20;
                 int entryFontSize = 40;
                 int outlineThickness = 10;

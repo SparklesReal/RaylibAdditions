@@ -7,22 +7,6 @@
 #include <unordered_map>
 #include <algorithm>
 
-std::vector<std::string> RaylibAdditions::splitString(std::string string, std::string seperator) {
-    std::vector<std::string> returnString;
-    std::string modString = string;
-    bool seperatorLeft = true;
-    while (seperatorLeft) {
-        if (modString.find(seperator) == std::string::npos) {
-            seperatorLeft = false;
-            returnString.push_back(modString);
-            break;
-        }
-        returnString.push_back(modString.substr(0, modString.find(seperator) - 1));
-        modString = modString.substr(modString.find(seperator) + seperator.size() + 1, modString.length());
-    }
-    return returnString;
-}
-
 RaylibAdditions::LoadedRoomClass RaylibAdditions::RoomClass::loadRoom(std::string path, std::string fileName) {
     std::ifstream file;
 	file.open(path + fileName);
@@ -83,7 +67,7 @@ RaylibAdditions::LoadedRoomClass RaylibAdditions::RoomClass::loadRoom(std::strin
         }
 
 		if(buttons == true) {
-            std::vector<std::string> splitString = RaylibAdditions::splitString(line, "-----");
+            std::vector<std::string> splitString = functions::splitString(line, "-----");
 
 			std::string texture = splitString[1];
 			float textureX = stof(splitString[2]);
@@ -103,7 +87,7 @@ RaylibAdditions::LoadedRoomClass RaylibAdditions::RoomClass::loadRoom(std::strin
 			LoadedRoom.music = LoadSound((path + "Music/" + line + ".wav").c_str());
 			break;
 		}
-        std::vector<std::string> splitString = RaylibAdditions::splitString(line, "-----");
+        std::vector<std::string> splitString = functions::splitString(line, "-----");
 
 		std::string texture = splitString[1];
 		float textureX = stof(splitString[2]);
@@ -168,12 +152,18 @@ void RaylibAdditions::Menu::Menu::DrawAndUpdate(Vector2 mousePos) {
 	MenuBox.height = menuSize.y;
 
 	std::vector<Rectangle> MenuTabs = {};
+	float adjustedWidth = MenuBox.width + outlineThickness * (pageTitles.size() - 1);
+	float tabWidth = adjustedWidth / float(pageTitles.size());
+
 	for (int i = 0; i < pageTitles.size(); i++) {
-		MenuTabs.push_back( {MenuBox.x + outlineThickness + i * ((MenuBox.width - (outlineThickness * 2)) / pageTitles.size()),
-		MenuBox.y,
-		((MenuBox.width - (outlineThickness * 2)) / pageTitles.size()),
-		titleBoxHeight } );
+		MenuTabs.push_back({
+			MenuBox.x + i * (tabWidth - outlineThickness),
+			MenuBox.y,
+			tabWidth,
+			titleBoxHeight
+		});
 	}
+
 
 	int i = 0;
 	if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
@@ -195,18 +185,24 @@ void RaylibAdditions::Menu::Menu::DrawAndUpdate(Vector2 mousePos) {
 	i = 0;
 	std::vector<Rectangle> settingsEntry = {};
 	std::vector<std::string> settingsEntryText;
-	for (auto& setting : settings.at(selectedPage)) {
+	
+	for (auto& setting : settings.at(selectedPage)) {  
+		std::string entryName = std::visit([](const auto& obj) -> std::string {
+        	return obj.name;
+    	}, setting);
+
 		settingsEntry.push_back({MenuBox.x + outlineThickness + 10, 
 		MenuBox.y + titleBoxHeight + float(outlineThickness) + i * (entryFontSize + 5.0f), 
 		MenuBox.width - (float(outlineThickness) * 2.0f), 
 		float(entryFontSize) + 5.0f});
-		settingsEntryText.push_back(setting.first);
+		settingsEntryText.push_back(entryName);
 		i++;
 	}
 
 	for (int i = 0; i < settingsEntry.size(); i++) {
 		RaylibAdditions::drawTextLeftCenterRect(settingsEntry.at(i), settingsEntryText.at(i), entryFontSize, textColor);
-		if (auto value = std::get_if<toggleBox>(&settings.at(selectedPage).find(settingsEntryText.at(i))->second)) {
+
+		if (auto value = std::get_if<toggleBox>(&settings.at(selectedPage).at(i))) {
 			Rectangle box {settingsEntry.at(i).x + MeasureText(settingsEntryText.at(i).c_str(), entryFontSize) + 10,
 			settingsEntry.at(i).y,
 			float(entryFontSize), float(entryFontSize)};
@@ -218,7 +214,7 @@ void RaylibAdditions::Menu::Menu::DrawAndUpdate(Vector2 mousePos) {
 			}
 		}
 
-		if (auto value = std::get_if<slider>(&settings.at(selectedPage).find(settingsEntryText.at(i))->second)) {
+		if (auto value = std::get_if<slider>(&settings.at(selectedPage).at(i))) {
 			value->box = {
 			settingsEntry.at(i).x + MeasureText(settingsEntryText.at(i).c_str(), entryFontSize) + 10,
 			settingsEntry.at(i).y,
@@ -241,33 +237,116 @@ void RaylibAdditions::Menu::Menu::DrawAndUpdate(Vector2 mousePos) {
 	if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
 		i = 0;
 		for (Rectangle& entry : settingsEntry) {
-        if (CheckCollisionPointRec(mousePos, entry)) {
-            auto& settingMap = settings.at(selectedPage);
-            auto it = settingMap.find(settingsEntryText.at(i));
+			if (CheckCollisionPointRec(mousePos, entry)) {
+				auto& settingList = settings.at(selectedPage);
+				auto& it = settingList.at(i);
 
-            if (it != settingMap.end()) {
-                if (auto value = std::get_if<toggleBox>(&it->second)) {
-					if (IsMouseButtonPressed(0)) {
-						if (value->state == false)
-							value->state = true;
-						else 
-							value->state = false;
+				if (it.index() != settingList.size()) {
+					if (auto value = std::get_if<toggleBox>(&it)) {
+						if (IsMouseButtonPressed(0)) {
+							value->state = !value->state;
+							std::cerr << value->state;
+						}
 					}
-                }
 
-				if (auto value = std::get_if<slider>(&it->second)) {
-					Rectangle collisionRect = value->box;
-					collisionRect.x += (float(entryFontSize) / 10.0f);
-					collisionRect.width -= ((float(entryFontSize) / 10.0f) * 2.0f);
-					if (CheckCollisionPointRec(mousePos, collisionRect)) {
-						value->procentage = 100 / ((value->box.width - ((float(entryFontSize) / 10.0f) * 2)) / ((mousePos.x + 1) - (value->box.x+float(entryFontSize) / 10.0f)) );
+					if (auto value = std::get_if<slider>(&it)) {
+						Rectangle collisionRect = value->box;
+						collisionRect.x += (float(entryFontSize) / 10.0f);
+						collisionRect.width -= ((float(entryFontSize) / 10.0f) * 2.0f);
+						if (CheckCollisionPointRec(mousePos, collisionRect)) {
+							value->procentage = 100 / ((value->box.width - ((float(entryFontSize) / 10.0f) * 2)) / ((mousePos.x + 1) - (value->box.x+float(entryFontSize) / 10.0f)) );
+						}
 					}
-                }
 
-            }
+				}
 
-        }
-        i++;
-    }
+			}
+			i++;
+    	}
 	}
+}
+
+void RaylibAdditions::Menu::Menu::addSettingToPage(std::string page, std::variant<toggleBox, slider, stringList> setting) {
+	for (int i = 0; i < pageTitles.size(); i++) {
+		if (pageTitles.at(i) == page)
+			settings.at(i).push_back(setting);
+	}
+}
+
+void RaylibAdditions::Menu::Menu::loadSettingsFromFile(std::string path) {
+	std::ifstream settingsFile(path);
+
+	if (!settingsFile.is_open()) {
+		std::cerr << "Could not find file: " << path << std::endl;
+		return;
+	}
+
+	std::string line;
+	std::string page;
+	while ( getline(settingsFile, line) ) {
+    	std::cout << line << '\n';
+
+		if (line.find('[') == 0 && line.find(']') == line.size() - 1) {
+            page = line.substr(1, line.size() - 2);
+			pageTitles.push_back(page);
+			settings.push_back({});
+			continue;
+        }
+
+		std::vector<std::string> data = functions::splitString(line, "|"); // data[2] is the value
+		data[0].erase(std::remove(data[0].begin(), data[0].end(), ' '), data[0].end());
+
+		if(data[0] == "toggleBox") {
+			if (data[2] == "true")
+				addSettingToPage(page, RaylibAdditions::Menu::toggleBox(data[1], true));
+			else
+				addSettingToPage(page, RaylibAdditions::Menu::toggleBox(data[1], false));
+		}
+		else if (data[0] == "slider") 
+			addSettingToPage(page, RaylibAdditions::Menu::slider(data[1], std::stoi(data[2])));
+
+    }
+    settingsFile.close();
+
+}
+
+void RaylibAdditions::Menu::Menu::saveSettingsToFile(std::string path) {
+	std::ofstream settingsFile(path);
+
+	if (!settingsFile.is_open()) {
+		std::cerr << "Could not find file: " << path << std::endl;
+		return;
+	}
+
+	for (int i = 0; i < pageTitles.size(); i++) {
+		if (i != 0)
+			settingsFile << "\n";
+		settingsFile << "[" << pageTitles.at(i) << "]" << std::endl;
+		for (int j = 0; j < settings.at(i).size(); j++) {
+
+			std::string type = "";
+			std::string name = "";
+			std::string data = "";
+
+			if (std::holds_alternative<RaylibAdditions::Menu::toggleBox>(settings.at(i).at(j))) {
+				auto& box = std::get<RaylibAdditions::Menu::toggleBox>(settings.at(i).at(j));
+				type = "toggleBox";
+				name = box.name;
+				if (box.state == true)
+					data = "true";
+				else
+					data = "false";
+			}
+			if (std::holds_alternative<RaylibAdditions::Menu::slider>(settings.at(i).at(j))) {
+				auto& slider = std::get<RaylibAdditions::Menu::slider>(settings.at(i).at(j));
+				type = "slider";
+				name = slider.name;
+				data = std::to_string(slider.procentage);
+			}
+
+			settingsFile << "   " << type << " | " << name << " | " << data << std::endl;
+		}
+	}
+
+    settingsFile.close();
 }
