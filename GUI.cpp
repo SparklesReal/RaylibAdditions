@@ -152,12 +152,18 @@ void RaylibAdditions::Menu::Menu::DrawAndUpdate(Vector2 mousePos) {
 	MenuBox.height = menuSize.y;
 
 	std::vector<Rectangle> MenuTabs = {};
+	float adjustedWidth = MenuBox.width + outlineThickness * (pageTitles.size() - 1);
+	float tabWidth = adjustedWidth / float(pageTitles.size());
+
 	for (int i = 0; i < pageTitles.size(); i++) {
-		MenuTabs.push_back( {MenuBox.x + i * ((MenuBox.width / pageTitles.size()) - outlineThickness / 2),
-		MenuBox.y,
-		(MenuBox.width   / float(pageTitles.size())) + outlineThickness * 2.0f,
-		titleBoxHeight } );
+		MenuTabs.push_back({
+			MenuBox.x + i * (tabWidth - outlineThickness),  // Overlap each tab by `outlineThickness`
+			MenuBox.y,
+			tabWidth,
+			titleBoxHeight
+		});
 	}
+
 
 	int i = 0;
 	if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
