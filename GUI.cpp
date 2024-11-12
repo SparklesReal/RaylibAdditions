@@ -136,7 +136,7 @@ void RaylibAdditions::RoomClass::drawFrameClass(FrameClass* frame) {
 			std::cout << "drawFrameClass error dumping frame info: " << frame->textures.data() << std::endl;
 			return;
 		}
-		DrawTexture(*(frame->textures[i]), frame->texturePos[i].x, frame->texturePos[i].y, WHITE);
+		DrawTextureEx(*(frame->textures[i]), frame->texturePos[i], 0, frame->textureScales.at(i), WHITE);
 	}
 }
 
