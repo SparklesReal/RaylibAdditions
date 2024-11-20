@@ -21,8 +21,8 @@ std::vector<std::string> functions::splitString(std::string string, std::string 
             returnString.push_back(modString);
             break;
         }
-        returnString.push_back(modString.substr(0, modString.find(seperator) - 1));
-        modString = modString.substr(modString.find(seperator) + seperator.size() + 1, modString.length());
+        returnString.push_back(modString.substr(0, modString.find(seperator)));
+        modString = modString.substr(modString.find(seperator) + seperator.size(), modString.length());
     }
     return returnString;
 }

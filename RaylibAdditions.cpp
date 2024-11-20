@@ -18,6 +18,15 @@ void RaylibAdditions::drawTextLeftCenterRect(Rectangle &rect, std::string &text,
 		);
 }
 
+void RaylibAdditions::drawTextLeftCenterRect(Rectangle &rect, std::string &text, int fontSize, Color color, float xOffset) {
+	DrawText(text.c_str(),
+		rect.x + xOffset,
+		(rect.y + rect.height / 2) - fontSize / 2, 
+		fontSize,
+		color
+		);
+}
+
 void RaylibAdditions::drawTextCenterTopRect(Rectangle &rect, std::string &text, int fontSize, Color color) {
 	DrawText(text.c_str(),
 		(rect.x + rect.width / 2) - MeasureText(text.c_str(), fontSize) / 2,

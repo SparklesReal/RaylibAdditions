@@ -58,10 +58,11 @@ namespace RaylibAdditions {
 
         class stringList {
             public:
-            stringList(std::string entryName) : name(entryName) {};
+            stringList(std::string entryName, std::vector<std::string> stringList) : name(entryName), items(stringList) {};
 
             std::string name;
             std::vector<std::string> items;
+            bool extended = false;
         };
 
         class Menu {
