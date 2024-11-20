@@ -252,17 +252,11 @@ void RaylibAdditions::Menu::Menu::DrawAndUpdate(Vector2 mousePos) {
 			};
 
 			DrawRectangleLinesEx(box, float(entryFontSize) / 10.0f, BLACK);
-			RaylibAdditions::drawTextLeftCenterRect(box, value->items.at(value->selectedItem), 20, BLACK, 10.0f);
+			RaylibAdditions::drawTextLeftCenterRect(box, value->items.at(0), 20, BLACK, 10.0f);
 
-			if (value->extended) {
-				std::vector<std::string*> nonSelectedItems;
-				for (int j = 0; j < value->items.size(); j++) {
-					if (j != value->selectedItem)
-					nonSelectedItems.push_back(&value->items.at(j));
-				}
-
+			if (value->extended) { // All -/+ are to adjust for the selected value being at position 0
 				std::vector<Rectangle> boxes;
-				int amountOfBoxes = nonSelectedItems.size(); // Rewrite with scrolling later or offer it as diffrent style
+				int amountOfBoxes = value->items.size() - 1; // Rewrite with scrolling later or offer it as diffrent style
 
 				for (int j = 0; j < amountOfBoxes; j++) {
 					Rectangle newBox = box;
@@ -274,18 +268,17 @@ void RaylibAdditions::Menu::Menu::DrawAndUpdate(Vector2 mousePos) {
 
 				for (int j = 0; j < boxes.size(); j++) {
 					DrawRectangleLinesEx(boxes.at(j), float(entryFontSize) / 10.0f, BLACK);
-					RaylibAdditions::drawTextLeftCenterRect(boxes.at(j), *(nonSelectedItems.at(j)), 20, BLACK, 10.0f);
+					RaylibAdditions::drawTextLeftCenterRect(boxes.at(j), value->items.at(j + 1), 20, BLACK, 10.0f);
 				}
 
 				if (IsMouseButtonPressed(0)) {
-					int j = 0;
-					for (auto& rect : boxes) {
-						if(CheckCollisionPointRec(GetMousePosition(), rect)) {
-							auto it = std::find(value->items.begin(), value->items.end(), *(nonSelectedItems.at(j)) );
-							value->selectedItem = std::distance(value->items.begin(), it);
+					for (int j = 0; j < boxes.size(); j++) {
+						if(CheckCollisionPointRec(GetMousePosition(), boxes.at(j))) {
+							std::string target = value->items.at(j);
+							value->items.erase(value->items.begin() + j);
+							value->items.insert(value->items.begin(), target);
 							value->extended = false;
 						}
-						j++;
 					}
 				}
 
@@ -373,7 +366,7 @@ void RaylibAdditions::Menu::Menu::loadSettingsFromFile(std::string path) {
 
 		else if (data[0] == "stringList") {
 			std::vector<std::string> stringList = functions::splitString(data[2], ", ");
-			addSettingToPage(page, RaylibAdditions::Menu::stringList(data[1], stringList, std::stoi(data[3]) ) );
+			addSettingToPage(page, RaylibAdditions::Menu::stringList(data[1], stringList) );
 		}
 
     }
@@ -425,8 +418,6 @@ void RaylibAdditions::Menu::Menu::saveSettingsToFile(std::string path) {
 					if (k != stringList.items.size() - 1)
 						data += ", ";
 				}
-
-				data += " | " + std::to_string(stringList.selectedItem);
 			}
 
 			settingsFile << "   " << type << " | " << name << " | " << data << std::endl;
