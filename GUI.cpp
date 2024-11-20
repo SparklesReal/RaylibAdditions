@@ -274,8 +274,8 @@ void RaylibAdditions::Menu::Menu::DrawAndUpdate(Vector2 mousePos) {
 				if (IsMouseButtonPressed(0)) {
 					for (int j = 0; j < boxes.size(); j++) {
 						if(CheckCollisionPointRec(GetMousePosition(), boxes.at(j))) {
-							std::string target = value->items.at(j);
-							value->items.erase(value->items.begin() + j);
+							std::string target = value->items.at(j + 1);
+							value->items.erase(value->items.begin() + j + 1);
 							value->items.insert(value->items.begin(), target);
 							value->extended = false;
 						}
