@@ -93,8 +93,10 @@ RaylibAdditions::LoadedRoomClass RaylibAdditions::RoomClass::loadRoom(std::strin
 		float textureX = stof(splitString[2]);
 		float textureY = stof(splitString[3]);
 		float scale = stof(splitString[4].substr(1));
-		if (!LoadedRoom.textures.contains(texture))
+
+		if (LoadedRoom.textures.find(texture) == LoadedRoom.textures.end())
 			LoadedRoom.textures.emplace(texture, LoadTexture((path + "Textures/" + texture + ".png").c_str()));
+
 		CurrentLoadedFrame.textures.push_back(&LoadedRoom.textures.at(texture));
 		std::cout << "Log: texture placed in frame: " << path + "Textures/" + texture + ".png" << std::endl;
 		CurrentLoadedFrame.texturePos.push_back(Vector2{textureX, textureY});
@@ -134,7 +136,7 @@ void RaylibAdditions::RoomClass::drawFrameClass(FrameClass* frame) {
 			std::cout << "drawFrameClass error dumping frame info: " << frame->textures.data() << std::endl;
 			return;
 		}
-		DrawTexture(*(frame->textures[i]), frame->texturePos[i].x, frame->texturePos[i].y, WHITE);
+		DrawTextureEx(*(frame->textures[i]), frame->texturePos[i], 0, frame->textureScales.at(i), WHITE);
 	}
 }
 
