@@ -407,9 +407,10 @@ std::unordered_map<std::string, std::variant<bool, int, std::string>> RaylibAddi
 		else if (data[0] == "slider") 
 			returnMap.emplace(data[1], std::stoi(data[2]));
 
-		else if (data[0] == "stringList")
-			returnMap.emplace(data[1], data[2]);
-
+		else if (data[0] == "stringList") {
+			std::vector<std::string> stringList = functions::splitString(data[2], ", ");
+			returnMap.emplace(data[1], stringList.at(0));
+		}
 
     }
 
