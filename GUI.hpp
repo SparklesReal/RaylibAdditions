@@ -95,5 +95,7 @@ namespace RaylibAdditions {
 
                 void DrawAndUpdate(Vector2 mousePos = GetMousePosition());
         };
+
+        std::unordered_map<std::string, std::variant<bool, int, std::string>> loadSettingsFromFileToMap(std::string path); // For loading to game not as a menu but applied setting
     }
 }

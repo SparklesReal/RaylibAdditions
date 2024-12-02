@@ -376,6 +376,48 @@ void RaylibAdditions::Menu::Menu::loadSettingsFromFile(std::string path) {
 
 }
 
+std::unordered_map<std::string, std::variant<bool, int, std::string>> RaylibAdditions::Menu::loadSettingsFromFileToMap(std::string path) {
+	std::ifstream settingsFile(path);
+
+	std::unordered_map<std::string, std::variant<bool, int, std::string>> returnMap;
+
+	if (!settingsFile.is_open()) {
+		std::cerr << "Could not find file: " << path << std::endl;
+		return returnMap; // Exit like nothing happend and the rest of the program will just have to enjoy and empty map :)
+	}
+
+	std::string line;
+	while ( getline(settingsFile, line) ) {
+    	std::cout << line << '\n';
+
+		if (line.find('[') == 0 && line.find(']') == line.size() - 1) { // Page name
+			continue;
+        }
+
+		std::vector<std::string> data = functions::splitString(line, " | "); // data[2] is the value
+		data[0].erase(std::remove(data[0].begin(), data[0].end(), ' '), data[0].end());
+
+		if(data[0] == "toggleBox") {
+			if (data[2] == "true")
+				returnMap.emplace(data[1], true);
+			else
+				returnMap.emplace(data[1], false);
+		}
+
+		else if (data[0] == "slider") 
+			returnMap.emplace(data[1], std::stoi(data[2]));
+
+		else if (data[0] == "stringList")
+			returnMap.emplace(data[1], data[2]);
+
+
+    }
+
+    settingsFile.close();
+	return returnMap;
+}
+
+
 void RaylibAdditions::Menu::Menu::saveSettingsToFile(std::string path) {
 	std::ofstream settingsFile(path);
 
