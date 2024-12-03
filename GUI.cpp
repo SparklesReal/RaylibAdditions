@@ -333,6 +333,30 @@ void RaylibAdditions::Menu::Menu::addSettingToPage(std::string page, std::varian
 	}
 }
 
+void RaylibAdditions::Menu::Menu::removeSettingFromPage(std::string page, std::string name) {
+    for (size_t i = 0; i < pageTitles.size(); i++) {
+        if (pageTitles.at(i) == page) {
+
+            auto& pageSettings = settings.at(i);
+            for (auto it = pageSettings.begin(); it != pageSettings.end(); ) {
+                bool shouldErase = false;
+
+                std::visit([&](auto&& contained) {
+                    if (contained.name == name) {
+                        shouldErase = true;
+                    }
+                }, *it);
+
+                if (shouldErase) {
+                    it = pageSettings.erase(it);
+                } else {
+                    ++it;
+                }
+            }
+
+        }
+    }
+}
 void RaylibAdditions::Menu::Menu::loadSettingsFromFile(std::string path) {
 	std::ifstream settingsFile(path);
 

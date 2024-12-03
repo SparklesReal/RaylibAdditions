@@ -84,6 +84,7 @@ namespace RaylibAdditions {
                 void loadSettingsFromFile(std::string path);
                 void saveSettingsToFile(std::string path);
                 void addSettingToPage(std::string page, std::variant<toggleBox, slider, stringList> setting);
+                void removeSettingFromPage(std::string page, std::string name);
 
                 int titleFontSize = 20;
                 int entryFontSize = 40;
