@@ -357,6 +357,58 @@ void RaylibAdditions::Menu::Menu::removeSettingFromPage(std::string page, std::s
         }
     }
 }
+
+void RaylibAdditions::Menu::Menu::setSettingAtPage(std::string page, std::string name, std::variant<toggleBox, slider, stringList> setting) {
+    for (size_t i = 0; i < pageTitles.size(); i++) {
+        if (pageTitles.at(i) == page) {
+
+            auto& pageSettings = settings.at(i);
+            for (auto it = pageSettings.begin(); it != pageSettings.end(); ) {
+                bool found = false;
+
+                std::visit([&](auto&& contained) {
+                    if (contained.name == name) {
+                        found = true;
+                    }
+                }, *it);
+
+                if (found) {
+					*it = setting;
+					return;
+                } else {
+                    ++it;
+                }
+            }
+
+        }
+    }
+}
+
+std::variant<RaylibAdditions::Menu::toggleBox, RaylibAdditions::Menu::slider, RaylibAdditions::Menu::stringList>* RaylibAdditions::Menu::Menu::getVariant(std::string page, std::string name) {
+        
+	auto pageIter = std::find(pageTitles.begin(), pageTitles.end(), page);
+	if (pageIter == pageTitles.end()) {
+		return nullptr;  // Page not found.
+	}
+
+	auto& pageSettings = settings.at(std::distance(pageTitles.begin(), pageIter));
+
+	for (auto& setting : pageSettings) {
+		bool found = false;
+		std::visit([&](auto&& contained) {
+			if (contained.name == name) {
+				found = true;
+			}
+		}, setting);
+
+		if (found) {
+			return &setting;
+		}
+	}
+
+	return nullptr;
+}
+
 void RaylibAdditions::Menu::Menu::loadSettingsFromFile(std::string path) {
 	std::ifstream settingsFile(path);
 
@@ -397,7 +449,6 @@ void RaylibAdditions::Menu::Menu::loadSettingsFromFile(std::string path) {
 
     }
     settingsFile.close();
-
 }
 
 std::unordered_map<std::string, std::variant<bool, int, std::string>> RaylibAdditions::Menu::loadSettingsFromFileToMap(std::string path) {
